@@ -49,35 +49,36 @@ class CompanyController extends Controller
     <h1>企業データ検索</h1>
 
     <!-- プルダウンフォーム -->
-    <form method="GET" action="{{ url('/comps_database') }}">
+    <form method="GET" action="<?php echo e(url('/comps_database')); ?>">
         <label for="comp_name">企業名を選択してください:</label>
         <select name="comp_name" id="comp_name" required>
             <option value="">--選択してください--</option>
-            @foreach ($companies as $company)
-                <option value="{{ $company->comp_name }}" 
-                        {{ request('comp_name') === $company->comp_name ? 'selected' : '' }}>
-                    {{ $company->comp_name }}
+            <?php $__currentLoopData = $companies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $company): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <option value="<?php echo e($company->comp_name); ?>" 
+                        <?php echo e(request('comp_name') === $company->comp_name ? 'selected' : ''); ?>>
+                    <?php echo e($company->comp_name); ?>
+
                 </option>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </select>
         <button type="submit">検索</button>
     </form>
 
     <!-- 選択された企業のデータ表示 -->
-    @if ($selectedCompany)
+    <?php if($selectedCompany): ?>
         <h2>選択した企業のデータ</h2>
-        <p><strong>企業名:</strong> {{ $selectedCompany->comp_name }}</p>
-        <p><strong>平均年齢:</strong> {{ $selectedCompany->av_age }}歳</p>
-        <p><strong>平均給与:</strong> {{ $selectedCompany->av_salary }}万円</p>
-        <p><strong>売上:</strong> {{ $selectedCompany->sales }}万円</p>
-        <p><strong>利益:</strong> {{ $selectedCompany->profit }}万円</p>
-        <p><strong>純利益:</strong> {{ $selectedCompany->net_profit }}万円</p>
+        <p><strong>企業名:</strong> <?php echo e($selectedCompany->comp_name); ?></p>
+        <p><strong>平均年齢:</strong> <?php echo e($selectedCompany->av_age); ?>歳</p>
+        <p><strong>平均給与:</strong> <?php echo e($selectedCompany->av_salary); ?>万円</p>
+        <p><strong>売上:</strong> <?php echo e($selectedCompany->sales); ?>万円</p>
+        <p><strong>利益:</strong> <?php echo e($selectedCompany->profit); ?>万円</p>
+        <p><strong>純利益:</strong> <?php echo e($selectedCompany->net_profit); ?>万円</p>
 
         <!-- womensdatabaseのデータを表示 -->
-        @if ($womensData)
-            <p><strong>離脱率ランキング/27位中:</strong> {{ $womensData->turnover_rate_rank }}</p>
-            <p><strong>平均勤続年数ランキング/27位中:</strong> {{ $womensData->avg_tenure_rank }}</p>
-            <p><strong>男女の賃金差ランキング/27位中:</strong> {{ $womensData->wage_gap_rank }}</p>
+        <?php if($womensData): ?>
+            <p><strong>離脱率ランキング/27位中:</strong> <?php echo e($womensData->turnover_rate_rank); ?></p>
+            <p><strong>平均勤続年数ランキング/27位中:</strong> <?php echo e($womensData->avg_tenure_rank); ?></p>
+            <p><strong>男女の賃金差ランキング/27位中:</strong> <?php echo e($womensData->wage_gap_rank); ?></p>
             
             <!-- Chart.js グラフ -->
             <canvas id="genderChart" width="100" height="100"></canvas>
@@ -94,10 +95,11 @@ class CompanyController extends Controller
                         datasets: [{
                             label: '女性比率 (%)',
                             data: [
-                                {{ $womensData->female_worker_ratio }},
-                                {{ $womensData->female_supervisor_ratio }},
-                                {{ $womensData->female_manager_ratio }},
-                                {{ $womensData->female_executive_ratio }}
+                                <?php echo e($womensData->female_worker_ratio); ?>,
+                                <?php echo e($womensData->female_supervisor_ratio); ?>,
+                                <?php echo e($womensData->female_manager_ratio); ?>,
+                                <?php echo e($womensData->female_executive_ratio); ?>
+
                             ],
                             backgroundColor: [
                                 'rgba(75, 192, 192, 0.2)',
@@ -132,8 +134,9 @@ class CompanyController extends Controller
                         datasets: [{
                             label: '平均勤続年数 (年)',
                             data: [
-                                {{ $womensData->avg_tenure_men }},
-                                {{ $womensData->avg_tenure_women }}
+                                <?php echo e($womensData->avg_tenure_men); ?>,
+                                <?php echo e($womensData->avg_tenure_women); ?>
+
                             ],
                             backgroundColor: [
                                 'rgba(54, 162, 235, 0.2)',
@@ -168,8 +171,9 @@ class CompanyController extends Controller
                         datasets: [{
                             label: '男女の賃金差 (％)',
                             data: [
-                                {{ $womensData->wage_gap_by_men }},
-                                {{ $womensData->wage_gap_by_gender }}
+                                <?php echo e($womensData->wage_gap_by_men); ?>,
+                                <?php echo e($womensData->wage_gap_by_gender); ?>
+
                             ],
                             backgroundColor: [
                                 'rgba(54, 162, 235, 0.2)',
@@ -198,13 +202,14 @@ class CompanyController extends Controller
 
             </script>
 
-<p><strong>平均残業時間:</strong> {{ $womensData->avg_overtime_hours }}時間</p>
-<p><strong>有給休暇取得率:</strong> {{ $womensData->paid_leave_usage_rate }}％</p>
-        @else
+<p><strong>平均残業時間:</strong> <?php echo e($womensData->avg_overtime_hours); ?>時間</p>
+<p><strong>有給休暇取得率:</strong> <?php echo e($womensData->paid_leave_usage_rate); ?>％</p>
+        <?php else: ?>
             <p>離職率ランキングのデータは見つかりませんでした。</p>
-        @endif
-    @elseif (request()->has('comp_name'))
+        <?php endif; ?>
+    <?php elseif(request()->has('comp_name')): ?>
         <p>選択した企業のデータは見つかりませんでした。</p>
-    @endif
+    <?php endif; ?>
 </body>
 </html>
+<?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/gs-laravel/resources/views/comps_database.blade.php ENDPATH**/ ?>

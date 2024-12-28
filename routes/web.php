@@ -75,3 +75,4 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // ãƒ
 
 Route::get('/comps_database', [CompsDatabaseController::class, 'index']);
 Route::post('/comps_database', [CompsDatabaseController::class, 'show']);
+Route::get('/comps_database', [CompsDatabaseController::class, 'showCompanies']);
